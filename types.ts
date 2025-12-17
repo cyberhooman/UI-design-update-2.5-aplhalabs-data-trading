@@ -17,6 +17,19 @@ export interface NewsItem {
   isUrgent?: boolean;
 }
 
+export interface CBSpeech {
+  id: string;
+  currency: string;
+  date: string;
+  speaker: string;
+  content: string;
+  sourceUrl?: string;
+  bias?: {
+    label: 'HAWKISH' | 'DOVISH' | 'NEUTRAL';
+    score: number;
+  };
+}
+
 export interface Note {
   id: string;
   content: string;

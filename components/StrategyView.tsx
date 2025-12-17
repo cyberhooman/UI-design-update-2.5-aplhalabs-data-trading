@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
-import { Plus, Sparkles, Trash2, Save, FileText, ChevronRight, Check, XCircle } from 'lucide-react';
+import { Plus, Sparkles, Trash2, FileText, ShieldAlert } from 'lucide-react';
 import { Strategy } from '../types';
 
 const StrategyView: React.FC = () => {
@@ -47,6 +48,7 @@ const StrategyView: React.FC = () => {
     setIsAnalyzing(true);
     
     try {
+      // Create new GoogleGenAI instance right before making an API call
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const prompt = `
         Act as a senior institutional trader at a major hedge fund (e.g., Bridgewater, Citadel).
@@ -62,14 +64,15 @@ const StrategyView: React.FC = () => {
         Keep it under 150 words. Use bullet points.
       `;
 
+      // Use gemini-3-flash-preview for text tasks as per coding guidelines
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: prompt,
       });
 
       updateActiveStrategy({ aiFeedback: response.text });
     } catch (e) {
-      console.error(e);
+      console.error("AI Audit failed:", e);
       updateActiveStrategy({ aiFeedback: "Error connecting to AI Audit." });
     } finally {
       setIsAnalyzing(false);
@@ -218,7 +221,7 @@ const StrategyView: React.FC = () => {
                                     {isAnalyzing ? 'Auditing...' : 'AI Audit Strategy'}
                                 </button>
                                 <p className="text-[10px] text-notion-muted mt-2 text-center opacity-70">
-                                    Uses Gemini 2.5 Flash to critique logic holes.
+                                    Uses Gemini 3 Flash to critique logic holes.
                                 </p>
                             </div>
 
@@ -250,8 +253,5 @@ const StrategyView: React.FC = () => {
     </div>
   );
 };
-
-// Import needed for icon usage in loop above if extracted, but defined in same file here
-import { ShieldAlert } from 'lucide-react';
 
 export default StrategyView;
